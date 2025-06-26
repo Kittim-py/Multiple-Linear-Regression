@@ -1,7 +1,7 @@
 # Multiple-Linear-Regression
 ==========================================================================
 
-Title:       Correlation Analysis and Visualization
+Title:     Multiple-Linear-Regression and Visualization
 
 Authors:     Arindam Roy, Dr. Shubhabrata Datta, Rahul Mukherjee
 
@@ -77,6 +77,6 @@ Interpretation:
 
 Note:
 -----
-Ensure the dataset includes all required columns:
+Ensure the dataset includes all required columns
 
 ===============================================================================

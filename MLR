@@ -1,0 +1,102 @@
+===============================================================================
+Title:       Correlation Analysis and Visualization
+Authors:     Arindam Roy, Dr. Shubhabrata Datta, Rahul Mukherjee
+Affiliation: Center for Composite and Advanced Materials,
+             Department of Mechanical Engineering,
+             SRM Institute of Science and Technology
+===============================================================================
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+
+# Load and preprocess the data
+file_path = ''  # Update with your file path
+data = pd.read_csv(file_path)
+
+# Clean column names (remove extra spaces)
+data.columns = data.columns.str.strip()
+
+# Define independent variables (X) and dependent variable (Y)
+X_columns = ['INPUT']
+Y_column = 'OUTPUT'
+
+if not set(X_columns + [Y_column]).issubset(data.columns):
+    missing_cols = set(X_columns + [Y_column]) - set(data.columns)
+    raise ValueError(f"❌ Missing columns: {missing_cols}")
+
+X = data[X_columns]
+Y = data[Y_column]
+
+# Add constant for statsmodels
+X_sm = sm.add_constant(X)
+
+# Fit the regression model using statsmodels
+model_sm = sm.OLS(Y, X_sm).fit()
+
+# Make predictions
+Y_pred = model_sm.predict(X_sm)
+
+# Calculate performance metrics
+r_squared = model_sm.rsquared * 100  # Convert to percentage
+MSE = mean_squared_error(Y, Y_pred)
+RMSE = np.sqrt(MSE)
+MAE = mean_absolute_error(Y, Y_pred)
+
+# Extract and save coefficients
+coefficients = pd.DataFrame({
+    'Variable': X_sm.columns,
+    'Coefficient': model_sm.params.round(6),
+    'Standard Error': model_sm.bse.round(6),
+    't-Statistic': model_sm.tvalues.round(6),
+    'P-Value': model_sm.pvalues.round(6)
+})
+
+coefficients_output_path = 'C:/Users/admin/Downloads/MLR_Coefficients.csv'
+coefficients.to_csv(coefficients_output_path, index=False)
+print(f"✅ Coefficients and p-values saved to: {coefficients_output_path}")
+
+# Save p-values separately
+p_values_df = coefficients[['Variable', 'P-Value']]
+p_values_output_path = 'C:/Users/admin/Downloads/Significance_Values.csv'
+p_values_df.to_csv(p_values_output_path, index=False)
+print(f"✅ Significance values (p-values) saved to: {p_values_output_path}")
+
+# Plot observed vs. predicted values
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=Y, y=Y_pred, color='blue', label='Observed vs Predicted')
+plt.plot([min(Y), max(Y)], [min(Y), max(Y)], color='green', linestyle='-', linewidth=2, label='Ideal Fit')
+plt.xlabel('Observed ')
+plt.ylabel('Predicted )')
+plt.title(f'Multiple Linear Regression (R² = {r_squared:.2f}%)', color='red', fontweight='bold')  # Bold red title
+plt.legend()
+plt.show()
+
+# Construct regression equation
+intercept = model_sm.params[0]
+equation_terms = [f"({coef:.6f} * {var})" for coef, var in zip(model_sm.params[1:], X.columns)]
+regression_equation = f"Y = {intercept:.6f} + " + " + ".join(equation_terms)
+
+print("\n📌 **Regression Equation:**")
+print(regression_equation)
+
+# Print key metrics
+print("\n--- 📊 Regression Results ---")
+print(f"✅ R² Value: {r_squared:.2f}%")
+print(f"📉 Mean Square Error (MSE): {MSE:.6f}")
+print(f"📈 Root Mean Square Error (RMSE): {RMSE:.6f}")
+print(f"📊 Mean Absolute Error (MAE): {MAE:.6f}")
+
+# Print coefficients with p-values
+print("\n--- 📌 Coefficients and P-Values ---")
+print(coefficients.to_string(index=False))
+
+# Determine model quality
+if r_squared > 75:
+    print("\n\033[1;32m✅ The model has a good fit.\033[0m")  # Green text for good fit
+elif r_squared > 50:
+    print("\n\033[1;33m⚠️ The model has a moderate fit.\033[0m")  # Yellow for moderate fit
+else:
+    print("\n\033[1;31m❌ The model has a poor fit. Check the regression equation.\033[0m")  # Red for poor fit

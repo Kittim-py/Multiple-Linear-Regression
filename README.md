@@ -7,6 +7,29 @@ Affiliation: Center for Composite and Advanced Materials,
              SRM Institute of Science and Technology
 ===============================================================================
 
+Citations
+---------
+If you use this script or its outputs for academic, scientific, or industrial work,
+please cite it as follows:
+
+Arindam Roy, Shubhabrata Datta, Rahul Mukherjee (2025).
+"Correlation Analysis and Visualization for Hydrogen Desorption Modeling using MLR."
+GitHub Repository: https://github.com/Kittim-py/Multiple-Linear-Regression
+ORCID ID: https://orcid.org/0000-0002-4047-3772
+
+APA Style:
+Roy, A., Datta, S., & Mukherjee, R. (2025). Visualization for MLR Modeling using MLR https://github.com/Kittim-py/-mlr
+
+BibTeX:
+@misc{roy2025mlr,
+  author       = {Arindam Roy and Shubhabrata Datta and Rahul Mukherjee},
+  title        = {Visualization for MLR Modeling using MLR},
+  year         = {2025},
+  howpublished = {\url{https://github.com/Kittim-py/hydrogen-desorption-mlr}},
+  note         = {GitHub repository, ORCID: \url{https://orcid.org/0000-0002-4047-3772}}
+}
+
+
 Description:
 ------------
 This Python script performs a complete statistical analysis using multiple linear regression
